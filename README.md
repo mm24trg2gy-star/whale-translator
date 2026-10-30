@@ -2,11 +2,16 @@
 
 Chrome / Edge 扩展。整页双语对照 + 划词翻译，**默认接口免 Key、免注册、国内能直连**；想更准就换成 DeepSeek 这类便宜的兼容接口。
 
-<p align="center">
-  <img src="docs/mascot.jpg" alt="大肥鱼 · 鲸鱼娘" width="300" />
-</p>
-
-> 本项目由**大肥鱼**纯手搓，欢迎大家品鉴 · deepdeep
+<table>
+  <tr>
+    <td width="170" align="center" valign="middle">
+      <img src="docs/mascot-avatar.jpg" alt="大肥鱼 · 鲸鱼娘" width="150" />
+    </td>
+    <td valign="middle">
+      <b>本项目由大肥鱼纯手搓，欢迎大家品鉴 · deepdeep</b>
+    </td>
+  </tr>
+</table>
 
 ![整页双语效果](docs/screenshot-page.png)
 
