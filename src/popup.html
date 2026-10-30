@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
-  <title>鲸译</title>
+  <title data-i18n="appTitle">鲸译</title>
   <link rel="stylesheet" href="ui.css" />
   <style>
     body { width: 330px; }
@@ -46,68 +46,71 @@
     }
     .quick-out:empty { display: none; }
     #quick-go, #quick-copy { padding: 5px 12px; font-size: 12px; }
+    /* 英文文案更长，稍微放宽一点，避免「Translation only」折行 */
+    html[lang="en"] #mode { width: 178px !important; }
+    html[lang="en"] .seg button { font-size: 11px; padding: 0 4px; }
   </style>
 </head>
 <body>
   <div class="head">
     <div class="logo">译</div>
     <div class="grow">
-      <h1>鲸译</h1>
-      <div class="sub muted">省钱网页翻译</div>
+      <h1 data-i18n="appTitle">鲸译</h1>
+      <div class="sub muted" data-i18n="appSub">省钱网页翻译</div>
     </div>
-    <button class="icon-btn" id="open-options" title="设置">⚙</button>
+    <button class="icon-btn" id="open-options" data-i18n-title="settings" data-i18n-aria="settings" title="设置">⚙</button>
   </div>
 
   <main>
-    <button class="btn-primary" id="toggle">翻译此页</button>
+    <button class="btn-primary" id="toggle" data-i18n="toggleTranslate">翻译此页</button>
 
     <div class="card">
       <div class="line">
-        <div class="label">译文语言</div>
+        <div class="label" data-i18n="targetLang">译文语言</div>
         <select class="field" id="target" style="width: 168px; padding: 5px 26px 5px 9px; font-size: 12px;"></select>
       </div>
       <div class="line">
-        <div class="label">显示方式</div>
+        <div class="label" data-i18n="displayMode">显示方式</div>
         <div class="seg" id="mode" style="width: 156px;">
-          <button data-mode="bilingual">双语</button>
-          <button data-mode="only">纯译文</button>
+          <button data-mode="bilingual" data-i18n="modeBilingual">双语</button>
+          <button data-mode="only" data-i18n="modeOnly">纯译文</button>
         </div>
       </div>
     </div>
 
     <div class="card">
       <div class="line">
-        <div class="label" title="打开就翻，不用每次点">打开网页自动翻译</div>
+        <div class="label" data-i18n="autoLabel" data-i18n-title="autoTitle" title="打开就翻，不用每次点">打开网页自动翻译</div>
         <button class="switch" id="auto" aria-label="自动翻译"></button>
       </div>
       <div class="line">
-        <div class="label" title="滚到哪翻到哪，长文档更省钱">只翻可见区域</div>
+        <div class="label" data-i18n="visibleLabel" data-i18n-title="visibleTitle" title="滚到哪翻到哪，长文档更省钱">只翻可见区域</div>
         <button class="switch" id="visible" aria-label="只翻可见区域"></button>
       </div>
       <div class="line">
-        <div class="label">划词翻译</div>
+        <div class="label" data-i18n="bubbleLabel">划词翻译</div>
         <button class="switch" id="bubble" aria-label="划词翻译"></button>
       </div>
     </div>
 
     <div class="card">
       <div class="line">
-        <div class="label">翻译接口</div>
+        <div class="label" data-i18n="providerLabel">翻译接口</div>
         <select class="field" id="provider" style="width: 172px; padding: 5px 26px 5px 9px; font-size: 12px;"></select>
       </div>
       <div class="line">
-        <div class="label">额度用完自动切大模型<small>免费接口烧完不断档</small></div>
+        <div class="label"><span data-i18n="fallbackLabel">额度用完自动切大模型</span><small data-i18n="fallbackSub">免费接口烧完不断档</small></div>
         <button class="switch" id="fallback" aria-label="额度兜底"></button>
       </div>
       <div id="quota" class="quota-hint" style="display: none;"></div>
     </div>
 
     <div class="card" id="quick-card">
-      <textarea id="quick-input" class="field" rows="2" placeholder="中文→英文，英文→中文；其它语言用上面的译文语言"></textarea>
+      <textarea id="quick-input" class="field" rows="2" data-i18n-placeholder="quickPlaceholder" placeholder="中文→英文，英文→中文；其它语言用上面的译文语言"></textarea>
       <div class="line">
-        <button class="btn" id="quick-go" type="button">翻译</button>
+        <button class="btn" id="quick-go" type="button" data-i18n="goTranslate">翻译</button>
         <span class="quick-out" id="quick-out"></span>
-        <button class="btn" id="quick-copy" type="button" style="display: none;">复制</button>
+        <button class="btn" id="quick-copy" type="button" style="display: none;" data-i18n="copy">复制</button>
       </div>
     </div>
 
@@ -118,7 +121,7 @@
   </main>
 
   <footer>
-    <kbd>Alt</kbd> + <kbd>T</kbd> 翻译 / 还原当前页　·　选中文字后点「译」
+    <kbd>Alt</kbd> + <kbd>T</kbd> <span data-i18n="footerHint">翻译 / 还原当前页　·　选中文字后点「译」</span>
     <span id="ver" style="float: right; opacity: .7;"></span>
   </footer>
 

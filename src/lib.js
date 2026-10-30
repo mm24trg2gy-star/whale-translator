@@ -31,9 +31,9 @@ export const LANGS = [
 ];
 
 export const PROVIDERS = [
-  { id: 'mymemory', name: 'MyMemory（免费）', hint: '免 Key · 国内能直连 · 每天 5000 词额度' },
-  { id: 'google', name: 'Google 翻译（免费）', hint: '免 Key · 质量稳 · 国内需要代理' },
-  { id: 'llm', name: '大模型 API（按量计费）', hint: '译文最顺 · 通义 flash 约 ¥0.15 / 百万 tokens 起' }
+  { id: 'mymemory', name: 'MyMemory（免费）', nameEn: 'MyMemory (free)', hint: '免 Key · 国内能直连 · 每天 5000 词额度' },
+  { id: 'google', name: 'Google 翻译（免费）', nameEn: 'Google Translate (free)', hint: '免 Key · 质量稳 · 国内需要代理' },
+  { id: 'llm', name: '大模型 API（按量计费）', nameEn: 'LLM API (pay per use)', hint: '译文最顺 · 通义 flash 约 ¥0.15 / 百万 tokens 起' }
 ];
 
 export function targetName(code) {

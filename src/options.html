@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
-  <title>鲸译 · 设置</title>
+  <title data-i18n="optionsTitle">鲸译 · 设置</title>
   <link rel="stylesheet" href="ui.css" />
   <style>
     body { padding: 28px 20px 60px; }
@@ -72,111 +72,111 @@
   <header>
     <div class="logo">译</div>
     <div class="grow">
-      <h1>鲸译 · 设置</h1>
-      <p>整页双语 + 划词翻译，能白嫖的不花钱，该花钱的也只花在刀刃上。</p>
+      <h1 data-i18n="optionsTitle">鲸译 · 设置</h1>
+      <p data-i18n="optionsSub">整页双语 + 划词翻译，能白嫖的不花钱，该花钱的也只花在刀刃上。</p>
     </div>
     <span class="chip" id="ver">v—</span>
   </header>
 
   <section>
-    <h2>翻译接口</h2>
+    <h2 data-i18n="secProvider">翻译接口</h2>
     <div class="providers" id="providers"></div>
 
     <div id="llm-box">
       <div class="line">
-        <span class="lbl2">快速选择服务商<small>点一下自动填好地址和模型，填错了可以手动改</small></span>
+        <span class="lbl2"><span data-i18n="presetLabel">快速选择服务商</span><small data-i18n="presetSub">点一下自动填好地址和模型，填错了可以手动改</small></span>
         <select class="field" id="preset" style="width: 210px;"></select>
       </div>
       <div class="grid2">
-        <label class="lbl">接口地址（OpenAI 兼容）
+        <label class="lbl"><span data-i18n="baseUrlLabel">接口地址（OpenAI 兼容）</span>
           <input class="field" id="base-url" type="text" placeholder="https://api.deepseek.com/v1" spellcheck="false" />
         </label>
-        <label class="lbl">模型名
+        <label class="lbl"><span data-i18n="modelLabel">模型名</span>
           <input class="field" id="model" type="text" placeholder="deepseek-flash" spellcheck="false" />
         </label>
       </div>
-      <label class="lbl">API Key
+      <label class="lbl"><span data-i18n="keyLabel">API Key</span>
         <input class="field" id="api-key" type="password" placeholder="sk-..." spellcheck="false" autocomplete="off" />
       </label>
-      <div class="tiny" id="local-key-note" style="display: none; color: var(--ok);">
+      <div class="tiny" id="local-key-note" style="display: none; color: var(--ok);" data-i18n="localKeyNoteFallback">
         ✓ 已检测到本机内置 Key（只对 DeepSeek 生效），这里留空会自动用它
       </div>
       <div class="row">
-        <span class="lbl2">JSON 模式<small>模型支持时更稳；报 400 就关掉</small></span>
+        <span class="lbl2"><span data-i18n="jsonMode">JSON 模式</span><small data-i18n="jsonModeSub">模型支持时更稳；报 400 就关掉</small></span>
         <button class="switch" id="json-mode" type="button" aria-label="JSON 模式"></button>
       </div>
     </div>
 
     <div class="line">
-      <span class="lbl2">免费额度用完自动切到大模型<small>MyMemory 每天 5000 词，烧完自动改用上面配置的大模型，页面上会提示你</small></span>
+      <span class="lbl2"><span data-i18n="fallbackLong">免费额度用完自动切到大模型</span><small data-i18n="fallbackLongSub">MyMemory 每天 5000 词，烧完自动改用上面配置的大模型，页面上会提示你</small></span>
       <button class="switch" id="auto-fallback" type="button" aria-label="额度兜底"></button>
     </div>
 
     <div id="quota-note" class="quota-note" style="display: none;">
       <span id="quota-text"></span>
-      <button class="btn" id="quota-clear" type="button">立即切回免费</button>
+      <button class="btn" id="quota-clear" type="button" data-i18n="quotaClear">立即切回免费</button>
     </div>
   </section>
 
   <section>
-    <h2>翻译行为</h2>
+    <h2 data-i18n="secBehavior">翻译行为</h2>
     <div class="grid2">
-      <label class="lbl">译文语言
+      <label class="lbl"><span data-i18n="targetLang">译文语言</span>
         <select class="field" id="target"></select>
       </label>
-      <label class="lbl">显示方式
+      <label class="lbl"><span data-i18n="modeLabel">显示方式</span>
         <select class="field" id="mode">
-          <option value="bilingual">双语对照（原文 + 译文）</option>
-          <option value="only">只看译文（隐藏原文）</option>
+          <option value="bilingual" data-i18n="modeOptBilingual">双语对照（原文 + 译文）</option>
+          <option value="only" data-i18n="modeOptOnly">只看译文（隐藏原文）</option>
         </select>
       </label>
     </div>
     <div class="line">
-      <span class="lbl2">打开网页自动翻译<small>每种页面都会自动开翻，怕吵就关着用 Alt+T</small></span>
+      <span class="lbl2"><span data-i18n="autoLabel">打开网页自动翻译</span><small data-i18n="autoLongSub">每种页面都会自动开翻，怕吵就关着用 Alt+T</small></span>
       <button class="switch" id="auto" type="button" aria-label="自动翻译"></button>
     </div>
     <div class="line">
-      <span class="lbl2">只翻可见区域<small>滚到哪翻到哪；长文档能省掉一大半费用</small></span>
+      <span class="lbl2"><span data-i18n="visibleLabel">只翻可见区域</span><small data-i18n="visibleLongSub">滚到哪翻到哪；长文档能省掉一大半费用</small></span>
       <button class="switch" id="visible" type="button" aria-label="只翻可见区域"></button>
     </div>
     <div class="line">
-      <span class="lbl2">划词翻译<small>选中文字后弹出「译」按钮</small></span>
+      <span class="lbl2"><span data-i18n="bubbleLabel">划词翻译</span><small data-i18n="bubbleLongSub">选中文字后弹出「译」按钮</small></span>
       <button class="switch" id="bubble" type="button" aria-label="划词翻译"></button>
     </div>
     <div class="line">
-      <span class="lbl2">外币金额自动换算<small>译文里出现 ZAR / USD / € 之类的金额，后面补一个 ≈¥ 估价</small></span>
+      <span class="lbl2"><span data-i18n="currencyLabel">外币金额自动换算</span><small data-i18n="currencySub">译文里出现 ZAR / USD / € 之类的金额，后面补一个 ≈¥ 估价</small></span>
       <button class="switch" id="currency" type="button" aria-label="金额换算"></button>
     </div>
     <p class="note" id="rate-note" style="display: none;"></p>
   </section>
 
   <section>
-    <h2>连通性测试 / 缓存</h2>
+    <h2 data-i18n="secTools">连通性测试 / 缓存</h2>
     <div class="actions">
-      <button class="btn" id="test" type="button">测试当前接口</button>
-      <button class="btn" id="clear-cache" type="button">清空译文缓存</button>
-      <span id="test-out">还没测试</span>
+      <button class="btn" id="test" type="button" data-i18n="testBtn">测试当前接口</button>
+      <button class="btn" id="clear-cache" type="button" data-i18n="clearCacheBtn">清空译文缓存</button>
+      <span id="test-out" data-i18n="testIdle">还没测试</span>
     </div>
-    <p class="note" id="cache-note">已缓存 0 条译文。</p>
+    <p class="note" id="cache-note" data-i18n="cacheNoteInit">已缓存 0 条译文。</p>
   </section>
 
   <section>
-    <h2>备份 / 迁移</h2>
+    <h2 data-i18n="secBackup">备份 / 迁移</h2>
     <div class="actions">
-      <button class="btn" id="export-settings" type="button">导出设置（JSON）</button>
-      <button class="btn" id="import-settings" type="button">导入设置</button>
+      <button class="btn" id="export-settings" type="button" data-i18n="exportBtn">导出设置（JSON）</button>
+      <button class="btn" id="import-settings" type="button" data-i18n="importBtn">导入设置</button>
       <input type="file" id="import-file" accept=".json,application/json" style="display: none;" />
       <span id="io-out"></span>
     </div>
-    <p class="note">
+    <p class="note" data-i18n-html="backupNote">
       换电脑、重装浏览器时，导出这份 JSON 再导入就恢复原样（接口、Key、语言、开关全在里面）。<br />
       ⚠️ 文件里<b>包含 API Key 明文</b>，用完就删，别丢网盘、别发群里。
     </p>
   </section>
 
   <section>
-    <h2>说明</h2>
-    <p class="note">
+    <h2 data-i18n="secAbout">说明</h2>
+    <p class="note" data-i18n-html="aboutNote">
       · 密钥只存在本机 <code>chrome.storage.local</code>，不上传任何服务器。<br />
       · MyMemory / Google 用的是网页版翻译的公开入口，免费用、不用注册，但不是官方 API，量大可能被限流。<br />
       · 大模型接口按 token 计费，翻译整页通常只要几厘到几分钱；相同句子会被缓存，第二次不花钱。<br />
@@ -185,7 +185,7 @@
   </section>
 </div>
 
-<div id="saved">已保存 ✓</div>
+<div id="saved" data-i18n="saved">已保存 ✓</div>
 <script type="module" src="options.js"></script>
 </body>
 </html>

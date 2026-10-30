@@ -1,4 +1,5 @@
 import { mergeSettings, LANGS, PROVIDERS, getKeyFor } from './lib.js';
+import { t, applyI18n, uiLang } from './i18n.js';
 
 const $ = (sel) => document.querySelector(sel);
 const setStatus = (msg) => { $('#status').textContent = msg || ''; };
@@ -59,7 +60,7 @@ function renderProviders() {
   for (const p of PROVIDERS) {
     const opt = document.createElement('option');
     opt.value = p.id;
-    opt.textContent = p.name;
+    opt.textContent = uiLang() === 'en' ? (p.nameEn || p.name) : p.name;
     select.appendChild(opt);
   }
   select.value = settings.provider;
@@ -80,12 +81,12 @@ function render() {
   const translated = (tabState && tabState.translated) || 0;
   const btn = $('#toggle');
   btn.classList.toggle('is-on', active || translated > 0);
-  btn.textContent = active || translated > 0 ? '还原原文' : '翻译此页';
+  btn.textContent = active || translated > 0 ? t('toggleRestore') : t('toggleTranslate');
 }
 
 async function refreshState() {
   tabState = await ensureContent();
-  if (!tabState) setStatus('这个页面不能翻译（chrome:// 或商店页）');
+  if (!tabState) setStatus(t('pageNotTranslatable'));
   else setStatus('');
   render();
 }
@@ -96,11 +97,11 @@ async function refreshQuota() {
     const r = await chrome.runtime.sendMessage({ type: 'quota:get' });
     if (r && r.ok && r.cooling && r.llmReady) {
       const when = new Date(r.until);
-      const t = `${String(when.getHours()).padStart(2, '0')}:${String(when.getMinutes()).padStart(2, '0')}`;
-      hint.textContent = `免费额度已用完，正在用大模型兜底 · ${t} 恢复`;
+      const t2 = `${String(when.getHours()).padStart(2, '0')}:${String(when.getMinutes()).padStart(2, '0')}`;
+      hint.textContent = t('quotaLlm', { t: t2 });
       hint.style.display = 'block';
     } else if (r && r.ok && r.cooling && !r.llmReady) {
-      hint.textContent = '免费额度已用完，但大模型还没配 Key · 去设置里补上';
+      hint.textContent = t('quotaNoKey');
       hint.style.display = 'block';
     } else {
       hint.style.display = 'none';
@@ -113,20 +114,20 @@ async function refreshQuota() {
 async function refreshCache() {
   try {
     const r = await chrome.runtime.sendMessage({ type: 'stats' });
-    if (r && r.ok) $('#cache').textContent = `已缓存 ${r.cached} 条译文`;
+    if (r && r.ok) $('#cache').textContent = t('cached', { n: r.cached });
   } catch { /* 忽略 */ }
 }
 
 async function togglePage() {
   const state = await ensureContent();
   if (!state) {
-    setStatus('这个页面不能翻译（chrome:// 或商店页）');
+    setStatus(t('pageNotTranslatable'));
     return;
   }
   try {
     await chrome.tabs.sendMessage(tabId, { type: 'ui:toggle' });
   } catch {
-    setStatus('注入失败，刷新页面后再试');
+    setStatus(t('injectFail'));
     return;
   }
   setTimeout(refreshState, 120);
@@ -137,27 +138,27 @@ function bind() {
 
   $('#target').addEventListener('change', (e) => {
     saveSettings({ target: e.target.value });
-    setStatus('语言已切换，重新翻译后生效');
+    setStatus(t('langSwitched'));
   });
 
   document.querySelectorAll('#mode button').forEach((b) => {
     b.addEventListener('click', async () => {
       await saveSettings({ mode: b.dataset.mode });
       render();
-      setStatus('模式已切换');
+      setStatus(t('modeSwitched'));
     });
   });
 
   $('#auto').addEventListener('click', async () => {
     await saveSettings({ auto: !settings.auto });
     render();
-    setStatus(settings.auto ? '以后打开的网页会自动翻译' : '已关闭自动翻译');
+    setStatus(settings.auto ? t('autoOn') : t('autoOff'));
   });
 
   $('#visible').addEventListener('click', async () => {
     await saveSettings({ visibleOnly: !settings.visibleOnly });
     render();
-    setStatus(settings.visibleOnly ? '只翻滚动到的区域，更省' : '整页一次性翻完');
+    setStatus(settings.visibleOnly ? t('visibleOn') : t('visibleOff'));
   });
 
   $('#bubble').addEventListener('click', async () => {
@@ -170,18 +171,18 @@ function bind() {
     await saveSettings({ provider });
     await refreshQuota();
     if (provider === 'llm' && !getKeyFor(settings) && !/localhost|127\.0\.0\.1/.test(settings.llm.baseUrl || '')) {
-      setStatus('还没填 API Key，点右上角 ⚙ 去设置里补上');
+      setStatus(t('needKey'));
     } else if (provider !== 'llm' && settings.autoFallback === false) {
-      setStatus('已切到免费接口；额度用完会直接报错（兜底开关关着）');
+      setStatus(t('noFallback'));
     } else {
-      setStatus('接口已切换，新翻的内容走新接口');
+      setStatus(t('providerSwitched'));
     }
   });
 
   $('#fallback').addEventListener('click', async () => {
     await saveSettings({ autoFallback: settings.autoFallback === false });
     render();
-    setStatus(settings.autoFallback !== false ? '免费额度用完会自动切到大模型' : '已关闭额度兜底');
+    setStatus(settings.autoFallback !== false ? t('fallbackOn') : t('fallbackOff'));
   });
 
   $('#open-options').addEventListener('click', () => chrome.runtime.openOptionsPage());
@@ -202,42 +203,42 @@ function bind() {
     const out = $('#quick-out');
     const text = input.value.trim();
     if (!text) {
-      out.textContent = '先输入或粘贴点文字';
+      out.textContent = t('emptyInput');
       return;
     }
     const auto = autoTargetFor(text);
     const btn = $('#quick-go');
     btn.disabled = true;
-    btn.textContent = '翻译中';
+    btn.textContent = t('translating');
     out.textContent = '…';
     const msg = { type: 'translate', texts: [text] };
     if (auto.code) msg.target = auto.code;
     try {
       const r = await chrome.runtime.sendMessage(msg);
       if (!r || !r.ok) {
-        out.textContent = (r && r.error) || '翻译失败';
+        out.textContent = (r && r.error) || t('noContent');
         $('#quick-copy').style.display = 'none';
       } else {
-        const t = (r.results && r.results[0]) || '';
+        const outText = (r.results && r.results[0]) || '';
         const wasSkipped = !!(r.skipped && r.skipped[0]);
-        if (t) {
-          out.textContent = t;
+        if (outText) {
+          out.textContent = outText;
           $('#quick-copy').style.display = 'inline-block';
-          if (auto.label) setStatus(`自动选向：${auto.label}（要改请用上面的译文语言）`);
+          if (auto.label) setStatus(t('autoDirection', { label: auto.label }));
         } else if (wasSkipped) {
-          out.textContent = '这段已经是目标语言了，不用翻';
+          out.textContent = t('alreadyTarget');
           $('#quick-copy').style.display = 'none';
         } else {
-          out.textContent = '接口没返回内容，换个接口或再试一次';
+          out.textContent = t('noContent');
           $('#quick-copy').style.display = 'none';
         }
       }
     } catch {
-      out.textContent = '扩展后台没响应，重开一下面板试试';
+      out.textContent = t('noBackend');
       $('#quick-copy').style.display = 'none';
     } finally {
       btn.disabled = false;
-      btn.textContent = '翻译';
+      btn.textContent = t('goTranslate');
     }
   }
 
@@ -255,14 +256,15 @@ function bind() {
   $('#quick-copy').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText($('#quick-out').textContent || '');
-      setStatus('已复制');
+      setStatus(t('copied'));
     } catch {
-      setStatus('复制失败，手动选一下吧');
+      setStatus(t('copyFail'));
     }
   });
 }
 
 async function init() {
+  applyI18n();
   bind();
   try { $('#ver').textContent = 'v' + chrome.runtime.getManifest().version; } catch { /* 忽略 */ }
   await getSettings();
@@ -272,4 +274,4 @@ async function init() {
   await Promise.all([refreshState(), refreshCache(), refreshQuota()]);
 }
 
-init().catch((e) => setStatus('初始化失败：' + (e && e.message ? e.message : e)));
+init().catch((e) => setStatus(t('initFail', { e: e && e.message ? e.message : e })));

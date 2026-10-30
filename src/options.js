@@ -9,22 +9,23 @@ import {
   PROVIDERS,
   providerMeta
 } from './lib.js';
+import { t, applyI18n, uiLang } from './i18n.js';
 
 const $ = (sel) => document.querySelector(sel);
 
 const PRESETS = {
-  deepseek: { label: 'DeepSeek · deepseek-flash', baseUrl: 'https://api.deepseek.com/v1', model: 'deepseek-flash', jsonMode: true },
-  qwen: { label: '通义千问 · qwen-flash（最便宜）', baseUrl: 'https://cn-beijing.maas.qianwenaiapi.com/compatible-mode/v1', model: 'qwen-flash', jsonMode: true },
-  glm: { label: '智谱 GLM · glm-5.3-flash', baseUrl: 'https://open.bigmodel.cn/api/paas/v4', model: 'glm-5.3-flash', jsonMode: true },
-  mimo: { label: '小米 MiMo · mimo-v2.6-flash', baseUrl: 'https://api.xiaomimimo.com/v1', model: 'mimo-v2.6-flash', jsonMode: true },
-  siliconflow: { label: '硅基流动 · Qwen2.5-7B', baseUrl: 'https://api.siliconflow.cn/v1', model: 'Qwen/Qwen2.5-7B-Instruct', jsonMode: false },
-  ollama: { label: '本地 Ollama · qwen2.5:7b', baseUrl: 'http://localhost:11434/v1', model: 'qwen2.5:7b', jsonMode: false }
+  deepseek: { labelKey: 'presetDeepseek', baseUrl: 'https://api.deepseek.com/v1', model: 'deepseek-flash', jsonMode: true },
+  qwen: { labelKey: 'presetQwen', baseUrl: 'https://cn-beijing.maas.qianwenaiapi.com/compatible-mode/v1', model: 'qwen-flash', jsonMode: true },
+  glm: { labelKey: 'presetGlm', baseUrl: 'https://open.bigmodel.cn/api/paas/v4', model: 'glm-5.3-flash', jsonMode: true },
+  mimo: { labelKey: 'presetMimo', baseUrl: 'https://api.xiaomimimo.com/v1', model: 'mimo-v2.6-flash', jsonMode: true },
+  siliconflow: { labelKey: 'presetSiliconflow', baseUrl: 'https://api.siliconflow.cn/v1', model: 'Qwen/Qwen2.5-7B-Instruct', jsonMode: false },
+  ollama: { labelKey: 'presetOllama', baseUrl: 'http://localhost:11434/v1', model: 'qwen2.5:7b', jsonMode: false }
 };
 
-const PROVIDER_NOTES = {
-  mymemory: '免 Key · 国内能直连 · 每天 5000 词（推荐先试这个）',
-  google: '免 Key · 质量稳 · 国内需要代理才连得上',
-  llm: '按量计费 · 通义 flash 约 ¥0.15 / 百万 tokens 起，一页几厘钱'
+const PROVIDER_NOTE_KEYS = {
+  mymemory: 'noteMymemory',
+  google: 'noteGoogle',
+  llm: 'noteLlm'
 };
 
 let settings = mergeSettings();
@@ -74,10 +75,19 @@ function renderProviders() {
   for (const p of PROVIDERS) {
     const label = document.createElement('label');
     label.className = 'provider' + (settings.provider === p.id ? ' on' : '');
-    label.innerHTML =
-      `<input type="radio" name="provider" value="${p.id}" ${settings.provider === p.id ? 'checked' : ''} />` +
-      `<div><b>${p.name}</b><span>${PROVIDER_NOTES[p.id] || ''}</span></div>`;
-    label.querySelector('input').addEventListener('change', () => {
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'provider';
+    input.value = p.id;
+    input.checked = settings.provider === p.id;
+    const text = document.createElement('div');
+    const name = document.createElement('b');
+    name.textContent = uiLang() === 'en' ? (p.nameEn || p.name) : p.name;
+    const note = document.createElement('span');
+    note.textContent = PROVIDER_NOTE_KEYS[p.id] ? t(PROVIDER_NOTE_KEYS[p.id]) : '';
+    text.append(name, note);
+    label.append(input, text);
+    input.addEventListener('change', () => {
       settings.provider = p.id;
       renderProviders();
       renderLlmBox();
@@ -111,12 +121,12 @@ function renderPresetSelect() {
   select.innerHTML = '';
   const custom = document.createElement('option');
   custom.value = 'custom';
-  custom.textContent = '自定义（手动填）';
+  custom.textContent = t('presetCustom');
   select.appendChild(custom);
   for (const [key, p] of Object.entries(PRESETS)) {
     const opt = document.createElement('option');
     opt.value = key;
-    opt.textContent = p.label;
+    opt.textContent = t(p.labelKey);
     select.appendChild(opt);
   }
   select.value = currentPresetKey();
@@ -137,11 +147,12 @@ async function refreshQuota() {
     const r = await chrome.runtime.sendMessage({ type: 'quota:get' });
     if (r && r.ok && r.cooling) {
       const when = new Date(r.until);
-      const t = `${String(when.getHours()).padStart(2, '0')}:${String(when.getMinutes()).padStart(2, '0')}`;
-      const name = providerMeta(r.provider).name;
+      const hhmm = `${String(when.getHours()).padStart(2, '0')}:${String(when.getMinutes()).padStart(2, '0')}`;
+      const meta = providerMeta(r.provider);
+      const name = uiLang() === 'en' ? (meta.nameEn || meta.name) : meta.name;
       $('#quota-text').textContent = r.llmReady
-        ? `${name} 额度用完了，正在用大模型兜底 · ${t} 恢复免费额度`
-        : `${name} 额度用完了，但大模型还没配好 Key，翻不了 · ${t} 后恢复`;
+        ? t('quotaLlmOpts', { name, t: hhmm })
+        : t('quotaNoKeyOpts', { name, t: hhmm });
       box.style.display = 'flex';
     } else {
       box.style.display = 'none';
@@ -154,9 +165,9 @@ async function refreshQuota() {
 async function refreshCacheNote() {
   try {
     const r = await chrome.runtime.sendMessage({ type: 'stats' });
-    if (r && r.ok) $('#cache-note').textContent = `已缓存 ${r.cached} 条译文，句句复用，不会重复花钱。`;
+    if (r && r.ok) $('#cache-note').textContent = t('cacheNoteOpts', { n: r.cached });
   } catch {
-    $('#cache-note').textContent = '取不到缓存状态（后台刚重启，稍后再看）。';
+    $('#cache-note').textContent = t('cacheNoteFail');
   }
 }
 
@@ -218,7 +229,7 @@ function bind() {
     await chrome.runtime.sendMessage({ type: 'quota:clear' });
     await refreshQuota();
     $('#test-out').className = 'ok';
-    $('#test-out').textContent = '已切回免费接口';
+    $('#test-out').textContent = t('switchedToFree');
   });
 
   $('#preset').addEventListener('change', (e) => {
@@ -232,30 +243,30 @@ function bind() {
     renderPresetSelect();
     persist();
     $('#test-out').className = '';
-    $('#test-out').textContent = `已填好 ${preset.label}，记得填对应的 Key`;
+    $('#test-out').textContent = t('presetFilled', { label: t(preset.labelKey) });
   });
 
   $('#test').addEventListener('click', async () => {
     const out = $('#test-out');
     out.className = '';
-    out.textContent = '测试中…';
+    out.textContent = t('testing');
     await persist();
     await new Promise((r) => setTimeout(r, 300)); // 等设置落盘
     try {
       const r = await chrome.runtime.sendMessage({ type: 'test' });
       if (r && r.ok) {
         out.className = 'ok';
-        const extra = r.fallback ? '（免费额度用完，已自动切到大模型）' : '';
-        out.textContent = `通了 ✓ ${r.ms}ms · ${r.sample}${extra}`;
+        const extra = r.fallback ? t('testFallbackExtra') : '';
+        out.textContent = t('testOk', { ms: r.ms, sample: r.sample, extra });
         refreshCacheNote();
         refreshQuota();
       } else {
         out.className = 'err';
-        out.textContent = (r && r.error) || '失败';
+        out.textContent = (r && r.error) || t('testFailText');
       }
     } catch (e) {
       out.className = 'err';
-      out.textContent = '后台无响应，重开设置页试试';
+      out.textContent = t('backendDown');
     }
   });
 
@@ -263,7 +274,7 @@ function bind() {
     await chrome.runtime.sendMessage({ type: 'cache:clear' });
     await refreshCacheNote();
     $('#test-out').className = 'ok';
-    $('#test-out').textContent = '缓存已清空';
+    $('#test-out').textContent = t('cacheCleared');
   });
 
   // ---- 备份 / 迁移 ----
@@ -276,16 +287,16 @@ function bind() {
       const a = document.createElement('a');
       const stamp = new Date().toISOString().slice(0, 10);
       a.href = url;
-      a.download = `鲸译设置-${stamp}.json`;
+      a.download = uiLang() === 'en' ? `whale-translator-settings-${stamp}.json` : `鲸译设置-${stamp}.json`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 2000);
       out.className = 'ok';
-      out.textContent = '已导出（文件里有 Key，记得用完删）';
+      out.textContent = t('exported');
     } catch (e) {
       out.className = 'err';
-      out.textContent = '导出失败：' + (e && e.message);
+      out.textContent = t('exportFail', { e: e && e.message });
     }
   });
 
@@ -305,10 +316,10 @@ function bind() {
       renderSwitches();
       flashSaved();
       out.className = 'ok';
-      out.textContent = '导入成功，刷新已打开的网页后生效';
+      out.textContent = t('imported');
     } catch (err) {
       out.className = 'err';
-      out.textContent = '导入失败：不是有效的设置文件（' + (err && err.message) + '）';
+      out.textContent = t('importFail', { e: err && err.message });
     } finally {
       e.target.value = '';
     }
@@ -316,10 +327,11 @@ function bind() {
 }
 
 async function init() {
+  applyI18n();
   try {
     const ver = chrome.runtime.getManifest().version;
     $('#ver').textContent = 'v' + ver;
-    $('#ver').title = '当前版本';
+    $('#ver').title = t('verTitle');
   } catch { /* 忽略 */ }
   const stored = await chrome.storage.local.get('settings');
   settings = mergeSettings(stored.settings);
@@ -345,11 +357,11 @@ async function refreshRateNote() {
     const r = await chrome.runtime.sendMessage({ type: 'rates:info' });
     if (r && r.ok && r.okRate && r.at) {
       const d = new Date(r.at);
-      const t = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-      note.textContent = `汇率更新于 ${t}（${r.source}），一天自动刷新一次。`;
+      const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      note.textContent = t('rateUpdated', { date: dateStr, source: r.source });
       note.style.display = 'block';
     } else {
-      note.textContent = '暂时取不到汇率（没网或接口挂了），先不换算。';
+      note.textContent = t('rateFail');
       note.style.display = 'block';
     }
   } catch {
@@ -365,7 +377,7 @@ async function checkLocalKey() {
     if (data && data.apiKey) {
       const host = hostOf(data.baseUrl || 'https://api.deepseek.com/v1');
       const note = $('#local-key-note');
-      note.textContent = `✓ 已检测到本机内置 Key（只对 ${host} 生效），这里留空会自动用它`;
+      note.textContent = t('localKeyNote', { host });
       note.style.display = 'block';
     }
   } catch { /* 没有就没有 */ }
@@ -373,5 +385,5 @@ async function checkLocalKey() {
 
 init().catch((e) => {
   $('#test-out').className = 'err';
-  $('#test-out').textContent = '初始化失败：' + (e && e.message);
+  $('#test-out').textContent = t('initFail', { e: e && e.message });
 });
