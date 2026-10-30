@@ -248,3 +248,24 @@ MIT 协议，欢迎提 issue / PR，细节见 [CONTRIBUTING.md](CONTRIBUTING.md)
 ⚠️ **提交前注意**：`key.local.json`、`keys/`、`*.pem` 已经在 `.gitignore` 里，但请顺手 `git status` 确认一下没被加进去。仓库里**不含任何密钥**。
 
 CI 跑单测（Ubuntu / Windows × Node 22/24）；端到端测试需要本机有 Chromium 系浏览器，按上面的命令手动跑。
+
+## 发版
+
+改了代码要发布，三步：
+
+```bash
+npm run changelog        # 生成 dist/更新日志.txt
+git add -A && git commit -m "feat: ..."
+git push
+```
+
+想让别人直接下载安装包，就打个 tag：
+
+```bash
+git tag v1.6.11
+git push origin v1.6.11
+```
+
+GitHub Actions 会自动打包 `whale-translator-v1.6.11.zip` 并挂到 **Releases** 页面（`.github/workflows/release.yml`），打包前会先扫一遍有没有密钥文件。
+
+> 只是更新代码、不打算发版的话，`git push` 就够了，仓库里的文件会自动更新，不用重新打包。

@@ -1,0 +1,46 @@
+name: Release
+
+# 打 tag（v1.6.11 这种）就自动打包 zip 并发布 Release
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: 生成记事本版更新日志
+        run: node tools/changelog-txt.mjs
+
+      - name: 打包扩展
+        run: |
+          set -e
+          STAGE="build/whale-translator"
+          mkdir -p "$STAGE"
+          cp -r manifest.json README.md CHANGELOG.md LICENSE CONTRIBUTING.md docs src "$STAGE/"
+          cp dist/更新日志.txt "$STAGE/"
+          ZIP="whale-translator-${GITHUB_REF_NAME}.zip"
+          (cd build && zip -qr "../$ZIP" whale-translator)
+          echo "ZIP=$ZIP" >> "$GITHUB_ENV"
+          echo "包大小：$(du -h "$ZIP" | cut -f1)"
+          # 安全检查：包里绝不能有密钥
+          if unzip -l "$ZIP" | grep -E 'key\.local\.json|\.pem$|(^|/)keys/'; then
+            echo "::error::包里混进了密钥文件，停止发布"
+            exit 1
+          fi
+
+      - name: 发布 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: whale-translator-${{ github.ref_name }}.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true
