@@ -4,8 +4,8 @@ Chrome / Edge 扩展。整页双语对照 + 划词翻译，**默认接口免 Key
 
 <table>
   <tr>
-    <td width="170" align="center" valign="middle">
-      <img src="docs/mascot-avatar.jpg" alt="大肥鱼 · 鲸鱼娘" width="150" />
+    <td width="230" align="center" valign="middle">
+      <img src="docs/mascot.jpg" alt="大肥鱼 · 鲸鱼娘" width="210" />
     </td>
     <td valign="middle">
       <b>本项目由大肥鱼纯手搓，欢迎大家品鉴 · deepdeep</b>
