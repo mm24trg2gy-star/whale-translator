@@ -2,7 +2,9 @@
 
 Chrome / Edge 扩展。整页双语对照 + 划词翻译，**默认接口免 Key、免注册、国内能直连**；想更准就换成 DeepSeek 这类便宜的兼容接口。
 
-> 🐟 本项目由**大肥鱼**纯手搓，欢迎大家品鉴。
+> <img src="docs/mascot.png" alt="大肥鱼" width="104" />
+>
+> 本项目由**大肥鱼**纯手搓，欢迎大家品鉴。
 
 ![整页双语效果](docs/screenshot-page.png)
 
