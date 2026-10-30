@@ -4,7 +4,7 @@ Chrome / Edge 扩展。整页双语对照 + 划词翻译，**默认接口免 Key
 
 > <img src="docs/mascot.png" alt="大肥鱼" width="104" />
 >
-> 本项目由**大肥鱼**纯手搓，欢迎大家品鉴。
+> 本项目由**大肥鱼**纯手搓，欢迎大家品鉴 · deepdeep
 
 ![整页双语效果](docs/screenshot-page.png)
 
