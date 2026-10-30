@@ -5,7 +5,7 @@
   "type": "module",
   "description": "鲸译 Chrome 扩展（package.json 只给本地测试用，扩展加载不需要它）",
   "scripts": {
-    "test": "node --test --test-isolation=none tests/lib.test.mjs tests/background.test.mjs",
+    "test": "node tools/run-tests.mjs",
     "test:browser": "node tests/smoke.mjs",
     "test:fallback": "node tests/fallback.mjs",
     "test:real": "node tests/real.mjs",
