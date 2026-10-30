@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <title>鲸译</title>
+  <link rel="stylesheet" href="ui.css" />
+  <style>
+    body { width: 330px; }
+    .head { display: flex; align-items: center; gap: 9px; padding: 10px 14px 4px; }
+    .logo {
+      width: 26px; height: 26px; border-radius: 8px; flex: 0 0 auto;
+      background: linear-gradient(135deg, #4f93ff, #2f7cf6);
+      color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 14px;
+    }
+    .head h1 { font-size: 14px; margin: 0; font-weight: 600; }
+    .head .sub { font-size: 11px; }
+    .icon-btn { border: 0; background: transparent; color: var(--muted); font-size: 15px; padding: 4px 6px; border-radius: 7px; }
+    .icon-btn:hover { background: rgba(148, 163, 184, 0.16); color: var(--fg); }
+    main { padding: 6px 14px 8px; display: grid; gap: 8px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 7px 12px; display: grid; gap: 6px; }
+    .line { display: flex; align-items: center; gap: 8px; }
+    .line .label { flex: 1; }
+    .line .label small { display: block; color: var(--muted); font-size: 11px; }
+    footer { padding: 0 14px 10px; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    kbd {
+      font: inherit; font-size: 10.5px; padding: 1px 5px; border-radius: 4px;
+      border: 1px solid var(--line); background: var(--card);
+    }
+    #status { font-size: 11.5px; color: var(--muted); min-height: 16px; }
+    .quota-hint {
+      font-size: 11.5px; line-height: 1.45; color: #b45309;
+      background: rgba(245, 158, 11, .12); border: 1px solid rgba(245, 158, 11, .3);
+      border-radius: 8px; padding: 6px 8px;
+    }
+    @media (prefers-color-scheme: dark) {
+      .quota-hint { color: #fbbf24; background: rgba(251, 191, 36, .1); border-color: rgba(251, 191, 36, .28); }
+    }
+    #quick-card { gap: 6px; }
+    #quick-input {
+      resize: none; font-size: 12px; line-height: 1.5;
+      padding: 5px 8px; min-height: 42px;
+    }
+    .quick-out {
+      flex: 1; min-width: 0; font-size: 12px; line-height: 1.5;
+      max-height: 52px; overflow: auto; white-space: pre-wrap; word-break: break-word;
+    }
+    .quick-out:empty { display: none; }
+    #quick-go, #quick-copy { padding: 5px 12px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="head">
+    <div class="logo">译</div>
+    <div class="grow">
+      <h1>鲸译</h1>
+      <div class="sub muted">省钱网页翻译</div>
+    </div>
+    <button class="icon-btn" id="open-options" title="设置">⚙</button>
+  </div>
+
+  <main>
+    <button class="btn-primary" id="toggle">翻译此页</button>
+
+    <div class="card">
+      <div class="line">
+        <div class="label">译文语言</div>
+        <select class="field" id="target" style="width: 168px; padding: 5px 26px 5px 9px; font-size: 12px;"></select>
+      </div>
+      <div class="line">
+        <div class="label">显示方式</div>
+        <div class="seg" id="mode" style="width: 156px;">
+          <button data-mode="bilingual">双语</button>
+          <button data-mode="only">纯译文</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="line">
+        <div class="label" title="打开就翻，不用每次点">打开网页自动翻译</div>
+        <button class="switch" id="auto" aria-label="自动翻译"></button>
+      </div>
+      <div class="line">
+        <div class="label" title="滚到哪翻到哪，长文档更省钱">只翻可见区域</div>
+        <button class="switch" id="visible" aria-label="只翻可见区域"></button>
+      </div>
+      <div class="line">
+        <div class="label">划词翻译</div>
+        <button class="switch" id="bubble" aria-label="划词翻译"></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="line">
+        <div class="label">翻译接口</div>
+        <select class="field" id="provider" style="width: 172px; padding: 5px 26px 5px 9px; font-size: 12px;"></select>
+      </div>
+      <div class="line">
+        <div class="label">额度用完自动切大模型<small>免费接口烧完不断档</small></div>
+        <button class="switch" id="fallback" aria-label="额度兜底"></button>
+      </div>
+      <div id="quota" class="quota-hint" style="display: none;"></div>
+    </div>
+
+    <div class="card" id="quick-card">
+      <textarea id="quick-input" class="field" rows="2" placeholder="中文→英文，英文→中文；其它语言用上面的译文语言"></textarea>
+      <div class="line">
+        <button class="btn" id="quick-go" type="button">翻译</button>
+        <span class="quick-out" id="quick-out"></span>
+        <button class="btn" id="quick-copy" type="button" style="display: none;">复制</button>
+      </div>
+    </div>
+
+    <div class="line tiny muted">
+      <span class="grow" id="cache"></span>
+    </div>
+    <div id="status"></div>
+  </main>
+
+  <footer>
+    <kbd>Alt</kbd> + <kbd>T</kbd> 翻译 / 还原当前页　·　选中文字后点「译」
+    <span id="ver" style="float: right; opacity: .7;"></span>
+  </footer>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

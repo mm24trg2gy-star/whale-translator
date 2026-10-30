@@ -1,0 +1,70 @@
+{
+  "manifest_version": 3,
+  "name": "鲸译 · 省钱网页翻译",
+  "version": "1.6.10",
+  "description": "整页双语对照 + 划词翻译。默认接口免 Key，免费额度用完自动切到 DeepSeek 等低价大模型；只翻可见区域，钱包不疼。",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/content.js"
+      ],
+      "css": [
+        "src/content.css"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "鲸译",
+    "default_icon": {
+      "16": "src/icons/icon16.png",
+      "32": "src/icons/icon32.png",
+      "48": "src/icons/icon48.png",
+      "128": "src/icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "src/options.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "toggle-page": {
+      "suggested_key": {
+        "default": "Alt+T"
+      },
+      "description": "翻译 / 还原当前页面"
+    },
+    "toggle-page-2": {
+      "suggested_key": {
+        "default": "Alt+Q"
+      },
+      "description": "备用快捷键：翻译 / 还原当前页面"
+    }
+  },
+  "icons": {
+    "16": "src/icons/icon16.png",
+    "32": "src/icons/icon32.png",
+    "48": "src/icons/icon48.png",
+    "128": "src/icons/icon128.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApUBnYraVrThlZ775Kts2EXU5p85TCWFkkJTAP3s+CG8KRnGcvcLd8ASl6mVPASPlTvAzApWgb5yvqZXIutTZsXWdURr/l9navq4kC1iOk4HTTO6+Kfl/QMX2VQdVsPrdLIsDxqv+HmKRhzAZ/dQo52SYUlP6dopKNxaSmqzpnRhr2lU0dOsmqczb2latdbPuB/RWp2bg3OfhnRP9bZXHCxkbRZEn6yGv0U6jCo4dJ7lhLzQ1mDul1EgTY8E5+CBDfs+vbhBsa7N4zvKdeCmbexdBdRkM7IuU+v6Sl7E4Qps7IRZxy0aBO8T0TstFbl/RKkg7pFBzjp6b8jsHj113tQIDAQAB"
+}

@@ -1,0 +1,6 @@
+# 统一换行符，避免 Windows / macOS / Linux 之间反复整文件 diff
+* text=auto eol=lf
+*.png binary
+*.gif binary
+*.ico binary
+*.jpg binary

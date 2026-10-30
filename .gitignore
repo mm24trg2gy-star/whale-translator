@@ -1,0 +1,19 @@
+# 密钥与本机配置——绝对不要提交
+key.local.json
+keys/
+*.pem
+*.key
+
+# 构建产物
+dist/
+
+# 依赖与缓存
+node_modules/
+.pnpm-store/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

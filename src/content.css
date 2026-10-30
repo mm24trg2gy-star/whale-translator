@@ -1,0 +1,39 @@
+/* 页面内译文样式（UI 自己在 Shadow DOM 里，不受这里影响） */
+
+.ct-tr {
+  display: block;
+  margin: 0.35em 0 0.15em;
+  padding-left: 0.7em;
+  border-left: 2px solid rgba(120, 140, 170, 0.45);
+  border-left: 2px solid color-mix(in srgb, currentColor 30%, transparent);
+  font-size: 0.97em;
+  line-height: 1.7;
+  text-transform: none;
+  letter-spacing: normal;
+  text-indent: 0;
+  unicode-bidi: isolate;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.ct-tr.ct-tr-inline {
+  display: inline;
+  margin: 0;
+  padding-left: 0.45em;
+  border-left: 0;
+}
+
+.ct-orig {
+  display: none !important;
+}
+
+/* 纯译文模式下，隐藏原文后翻译块不需要左边线 */
+html.ct-active .ct-only-mode > .ct-tr {
+  padding-left: 0;
+  border-left: 0;
+}
+
+/* 页面上原有的“翻译/原文”按钮之类的小元素，别把行高顶坏 */
+.ct-tr:empty {
+  display: none;
+}
