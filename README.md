@@ -4,7 +4,7 @@ Chrome / Edge 扩展。整页双语对照 + 划词翻译，**默认接口免 Key
 
 <p>
   <img align="left" width="210" hspace="20" src="docs/mascot.jpg" alt="大肥鱼 · 鲸鱼娘" />
-  <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+  <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
   本项目由<strong>大肥鱼</strong>纯手搓，欢迎大家品鉴 · deepdeep
 </p>
 
