@@ -244,17 +244,141 @@ const DICT = {
     presetMimo: 'Xiaomi MiMo · mimo-v2.6-flash',
     presetSiliconflow: 'SiliconFlow · Qwen2.5-7B',
     presetOllama: 'Local Ollama · qwen2.5:7b'
+  },
+  fr: {
+    // ---- 通用 ----
+    appTitle: 'Whale Translate',
+    appSub: 'Traduction de pages économe',
+    settings: 'Paramètres',
+
+    // ---- 工具栏面板 ----
+    toggleTranslate: 'Traduire cette page',
+    toggleRestore: 'Rétablir l’original',
+    targetLang: 'Traduire vers',
+    displayMode: 'Affichage',
+    modeBilingual: 'Bilingue',
+    modeOnly: 'Traduction',
+    autoLabel: 'Traduire automatiquement les pages',
+    autoTitle: 'Traduit dès l’ouverture, sans clic',
+    visibleLabel: 'Zone visible uniquement',
+    visibleTitle: 'Traduit au fil du défilement — moins cher sur les longs documents',
+    bubbleLabel: 'Traduction de la sélection',
+    providerLabel: 'Fournisseur',
+    fallbackLabel: 'Basculer vers le LLM quand le quota est épuisé',
+    fallbackSub: 'Continue de fonctionner après le quota gratuit',
+    quickPlaceholder: 'Chinois→anglais, anglais→chinois ; les autres langues suivent la cible ci-dessus',
+    goTranslate: 'Traduire',
+    translating: 'Traduction…',
+    copy: 'Copier',
+    cached: '{n} traductions en cache',
+    footerHint: 'traduire / rétablir · sélectionnez du texte puis 译',
+    pageNotTranslatable: 'Cette page ne peut pas être traduite (chrome:// ou boutique d’extensions)',
+    quotaLlm: 'Quota gratuit épuisé, bascule vers le LLM · réinitialisation à {t}',
+    quotaNoKey: 'Quota gratuit épuisé et aucune clé LLM · ajoutez-en une dans les paramètres',
+    injectFail: 'Injection impossible — rechargez la page et réessayez',
+    langSwitched: 'Langue modifiée ; retraduisez pour appliquer',
+    modeSwitched: 'Mode d’affichage modifié',
+    autoOn: 'Les nouvelles pages seront traduites automatiquement',
+    autoOff: 'Traduction automatique désactivée',
+    visibleOn: 'Seule la zone visible sera traduite',
+    visibleOff: 'Toute la page sera traduite d’un coup',
+    needKey: 'Aucune clé API — cliquez sur ⚙ en haut à droite pour en ajouter une',
+    noFallback: 'Fournisseur gratuit sélectionné ; les erreurs de quota seront affichées directement (repli désactivé)',
+    providerSwitched: 'Fournisseur modifié ; les nouveaux textes utilisent le nouveau fournisseur',
+    fallbackOn: 'Basculera vers le LLM quand le quota gratuit sera épuisé',
+    fallbackOff: 'Repli de quota désactivé',
+    emptyInput: 'Saisissez ou collez d’abord du texte',
+    autoDirection: 'Direction automatique : {label} (modifiez la cible ci-dessus pour forcer)',
+    alreadyTarget: 'Ce texte est déjà dans la langue cible',
+    noContent: 'Le fournisseur n’a rien renvoyé — essayez un autre fournisseur',
+    noBackend: 'L’arrière-plan de l’extension ne répond pas — rouvrez ce panneau',
+    copied: 'Copié',
+    copyFail: 'Copie impossible — sélectionnez le texte manuellement',
+    initFail: 'Échec de l’initialisation : {e}',
+
+    // ---- 设置页 ----
+    optionsTitle: 'Whale Translate · Paramètres',
+    optionsSub: 'Traduction bilingue de pages + traduction de sélection : gratuit quand c’est possible, très bon marché sinon.',
+    secProvider: 'Fournisseur',
+    presetLabel: 'Préréglage rapide',
+    presetSub: 'Remplit l’URL et le modèle ; vous pouvez les modifier ensuite',
+    baseUrlLabel: 'URL de base de l’API (compatible OpenAI)',
+    modelLabel: 'Modèle',
+    keyLabel: 'Clé API',
+    localKeyNoteFallback: '✓ Clé locale intégrée détectée — laissez vide pour l’utiliser',
+    localKeyNote: '✓ Clé locale intégrée détectée (uniquement pour {host}) — laissez vide pour l’utiliser',
+    jsonMode: 'Mode JSON',
+    jsonModeSub: 'Plus stable quand c’est pris en charge ; désactivez en cas d’erreur 400',
+    fallbackLong: 'Basculer vers le LLM quand le quota gratuit est épuisé',
+    fallbackLongSub: 'MyMemory autorise 5 000 mots par jour ; ensuite le LLM prend le relais et la page vous prévient',
+    quotaClear: 'Revenir au gratuit maintenant',
+    secBehavior: 'Comportement de traduction',
+    modeLabel: 'Affichage',
+    modeOptBilingual: 'Bilingue (original + traduction)',
+    modeOptOnly: 'Traduction seule (masquer l’original)',
+    autoLongSub: 'Chaque page se traduit automatiquement ; désactivez et utilisez Alt+T si c’est trop bruyant',
+    visibleLongSub: 'Traduit au fil du défilement — économise beaucoup sur les longs documents',
+    bubbleLongSub: 'Affiche un bouton 译 après sélection',
+    currencyLabel: 'Convertir les montants étrangers',
+    currencySub: 'Ajoute une estimation ≈¥ après les montants comme ZAR / USD / €',
+    secTools: 'Test de connexion / cache',
+    testBtn: 'Tester le fournisseur',
+    clearCacheBtn: 'Vider le cache de traduction',
+    testIdle: 'Pas encore testé',
+    secBackup: 'Sauvegarde / migration',
+    exportBtn: 'Exporter les paramètres (JSON)',
+    importBtn: 'Importer les paramètres',
+    backupNote: 'Vous changez de machine ou réinstallez le navigateur ? Exportez ce JSON puis importez-le pour tout restaurer (fournisseur, clés, langue, options).<br />⚠️ Le fichier contient votre <b>clé API en clair</b> — supprimez-le ensuite, ne le partagez pas.',
+    secAbout: 'Notes',
+    aboutNote: '· Les clés restent dans <code>chrome.storage.local</code> sur cette machine ; rien n’est envoyé à un serveur nous appartenant.<br />· MyMemory / Google utilisent des points d’accès publics : gratuits, sans inscription, mais non officiels — un usage intensif peut être limité.<br />· Les LLM facturent au token ; une page coûte généralement une fraction de centime, et les phrases répétées sont mises en cache.<br />· <code>Alt + T</code> traduit / rétablit la page ; un menu contextuel existe aussi pour le texte sélectionné.',
+    saved: 'Enregistré ✓',
+    verTitle: 'Version actuelle',
+
+    // ---- 设置页动态文案 ----
+    quotaLlmOpts: 'Quota {name} épuisé, bascule vers le LLM · retour du quota gratuit à {t}',
+    quotaNoKeyOpts: 'Quota {name} épuisé et aucune clé LLM · retour à {t}',
+    cacheNoteOpts: '{n} traductions en cache — réutilisées, jamais payées deux fois.',
+    cacheNoteInit: '0 traduction en cache.',
+    cacheNoteFail: 'Impossible de lire l’état du cache (l’arrière-plan vient de redémarrer).',
+    presetFilled: '{label} rempli — pensez à ajouter sa clé API',
+    testing: 'Test en cours…',
+    testOk: 'OK ✓ {ms} ms · {sample}{extra}',
+    testFallbackExtra: ' (quota gratuit épuisé, bascule vers le LLM)',
+    testFailText: 'Échec',
+    backendDown: 'Aucune réponse de l’arrière-plan — rouvrez cette page',
+    cacheCleared: 'Cache vidé',
+    switchedToFree: 'Retour au fournisseur gratuit',
+    exported: 'Exporté (le fichier contient votre clé — supprimez-le après usage)',
+    exportFail: 'Échec de l’export : {e}',
+    imported: 'Importé — rechargez les pages ouvertes pour appliquer',
+    importFail: 'Échec de l’import : fichier de paramètres invalide ({e})',
+    rateUpdated: 'Taux de change mis à jour le {date} ({source}), actualisés une fois par jour.',
+    rateFail: 'Taux de change indisponibles (hors ligne ou service en panne) — conversion en pause.',
+
+    // ---- 服务商说明 ----
+    noteMymemory: 'Sans clé · fonctionne sans proxy · 5 000 mots/jour (à essayer en premier)',
+    noteGoogle: 'Sans clé · qualité stable · nécessite un proxy en Chine',
+    noteLlm: 'À l’usage · Qwen flash à partir de ¥0,15 par million de tokens, une page coûte une fraction de centime',
+    presetCustom: 'Personnalisé (saisie manuelle)',
+    presetDeepseek: 'DeepSeek · deepseek-flash',
+    presetQwen: 'Qwen · qwen-flash (le moins cher)',
+    presetGlm: 'Zhipu GLM · glm-5.3-flash',
+    presetMimo: 'Xiaomi MiMo · mimo-v2.6-flash',
+    presetSiliconflow: 'SiliconFlow · Qwen2.5-7B',
+    presetOllama: 'Ollama local · qwen2.5:7b'
   }
 };
 
-/** 当前界面语言：zh / en */
+/** 当前界面语言：zh / fr / en（其余语言回落到英文） */
 export function uiLang() {
   let raw = '';
   try {
     raw = (chrome && chrome.i18n && chrome.i18n.getUILanguage && chrome.i18n.getUILanguage()) || '';
   } catch { /* 忽略 */ }
   if (!raw) raw = (typeof navigator !== 'undefined' && navigator.language) || 'zh';
-  return /^zh/i.test(raw) ? 'zh' : 'en';
+  if (/^zh/i.test(raw)) return 'zh';
+  if (/^fr/i.test(raw)) return 'fr';
+  return 'en';
 }
 
 /** 取一条文案，{name} 会被 vars 里的值替换 */

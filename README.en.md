@@ -25,6 +25,7 @@ A Chrome / Edge extension for **bilingual full-page translation** and **selectio
 - **Currency conversion** — amounts like `ZAR 300K` or `$1,200` get an `≈¥` estimate appended
 - **Does not translate what it should not** — code blocks, inputs and already-Chinese paragraphs are skipped
 - Auto-translate toggle, 9 target languages, `Alt + T` / `Alt + Q` shortcuts
+- **UI follows your browser language**: Chinese / English / French — and unless you pick a target, it defaults to your system language
 
 ![Bilingual page](docs/screenshot-page.png)
 
@@ -48,11 +49,11 @@ A Chrome / Edge extension for **bilingual full-page translation** and **selectio
 | Paste text in the popup → Translate | Chinese→English, English→Chinese, Enter to translate |
 | Icon → ⚙ | Settings: provider, language, mode, auto-translate |
 
-![Options page](docs/screenshot-options.png)
+![Options page](docs/screenshot-options-en.png)
 
 The popup:
 
-![Popup](docs/screenshot-popup.png)
+![Popup](docs/screenshot-popup-en.png)
 
 ## Which provider is cheapest
 

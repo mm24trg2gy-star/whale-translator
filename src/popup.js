@@ -1,4 +1,4 @@
-import { mergeSettings, LANGS, PROVIDERS, getKeyFor } from './lib.js';
+import { mergeSettings, LANGS, PROVIDERS, getKeyFor, targetForSystemLang } from './lib.js';
 import { t, applyI18n, uiLang } from './i18n.js';
 
 const $ = (sel) => document.querySelector(sel);
@@ -11,6 +11,9 @@ let tabState = null;
 async function getSettings() {
   const stored = await chrome.storage.local.get('settings');
   settings = mergeSettings(stored.settings);
+  if (!stored.settings || !stored.settings.target) {
+    settings.target = targetForSystemLang(chrome.i18n.getUILanguage());
+  }
   return settings;
 }
 
@@ -60,7 +63,7 @@ function renderProviders() {
   for (const p of PROVIDERS) {
     const opt = document.createElement('option');
     opt.value = p.id;
-    opt.textContent = uiLang() === 'en' ? (p.nameEn || p.name) : p.name;
+    opt.textContent = uiLang() === 'zh' ? p.name : (p.nameEn || p.name);
     select.appendChild(opt);
   }
   select.value = settings.provider;

@@ -7,7 +7,8 @@ import {
   hostOf,
   LANGS,
   PROVIDERS,
-  providerMeta
+  providerMeta,
+  targetForSystemLang
 } from './lib.js';
 import { t, applyI18n, uiLang } from './i18n.js';
 
@@ -82,7 +83,7 @@ function renderProviders() {
     input.checked = settings.provider === p.id;
     const text = document.createElement('div');
     const name = document.createElement('b');
-    name.textContent = uiLang() === 'en' ? (p.nameEn || p.name) : p.name;
+    name.textContent = uiLang() === 'zh' ? p.name : (p.nameEn || p.name);
     const note = document.createElement('span');
     note.textContent = PROVIDER_NOTE_KEYS[p.id] ? t(PROVIDER_NOTE_KEYS[p.id]) : '';
     text.append(name, note);
@@ -149,7 +150,7 @@ async function refreshQuota() {
       const when = new Date(r.until);
       const hhmm = `${String(when.getHours()).padStart(2, '0')}:${String(when.getMinutes()).padStart(2, '0')}`;
       const meta = providerMeta(r.provider);
-      const name = uiLang() === 'en' ? (meta.nameEn || meta.name) : meta.name;
+      const name = uiLang() === 'zh' ? meta.name : (meta.nameEn || meta.name);
       $('#quota-text').textContent = r.llmReady
         ? t('quotaLlmOpts', { name, t: hhmm })
         : t('quotaNoKeyOpts', { name, t: hhmm });
@@ -335,6 +336,9 @@ async function init() {
   } catch { /* 忽略 */ }
   const stored = await chrome.storage.local.get('settings');
   settings = mergeSettings(stored.settings);
+  if (!stored.settings || !stored.settings.target) {
+    settings.target = targetForSystemLang(chrome.i18n.getUILanguage());
+  }
   renderLang();
   renderProviders();
   renderLlmBox();

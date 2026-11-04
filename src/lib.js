@@ -53,6 +53,17 @@ export function hostOf(url) {
   }
 }
 
+/**
+ * 系统语言 → 默认译入语言。
+ * 中文环境译成中文，法语环境译成法语……不认识的语言按英文算。
+ */
+export function targetForSystemLang(tag) {
+  const s = String(tag || '').toLowerCase();
+  if (s.startsWith('zh')) return /tw|hk|hant/.test(s) ? 'zh-TW' : 'zh-CN';
+  const base = s.split(/[-_]/)[0];
+  return ['en', 'ja', 'ko', 'ru', 'fr', 'de', 'es'].includes(base) ? base : 'en';
+}
+
 /** 当前接口对应的 Key：按 host 分开存，DeepSeek 的 Key 不会发给别家 */
 export function getKeyFor(settings) {
   const llm = (settings && settings.llm) || {};

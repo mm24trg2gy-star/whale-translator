@@ -14,7 +14,8 @@ import {
   convertCurrencies,
   getKeyFor,
   hostOf,
-  targetName
+  targetName,
+  targetForSystemLang
 } from './lib.js';
 
 const SETTINGS_KEY = 'settings';
@@ -71,7 +72,12 @@ async function getSettings() {
   await ensureLocalKey();
   if (settingsCache) return settingsCache;
   const got = await chrome.storage.local.get(SETTINGS_KEY);
-  settingsCache = mergeSettings(got[SETTINGS_KEY]);
+  const stored = got[SETTINGS_KEY];
+  settingsCache = mergeSettings(stored);
+  // 没存过译文语言时，跟着系统语言走：中文→中文、法语→法语、英语→英语
+  if (!stored || !stored.target) {
+    try { settingsCache.target = targetForSystemLang(chrome.i18n.getUILanguage()); } catch { /* 忽略 */ }
+  }
   return settingsCache;
 }
 

@@ -19,8 +19,19 @@ import {
   getKeyFor,
   setKeyFor,
   hostOf,
-  cacheKey
+  cacheKey,
+  targetForSystemLang
 } from '../src/lib.js';
+
+test('targetForSystemLang：默认译入语言跟着系统语言走', () => {
+  assert.equal(targetForSystemLang('zh-CN'), 'zh-CN');
+  assert.equal(targetForSystemLang('zh-TW'), 'zh-TW');
+  assert.equal(targetForSystemLang('en-US'), 'en');
+  assert.equal(targetForSystemLang('fr-FR'), 'fr');
+  assert.equal(targetForSystemLang('de-DE'), 'de');
+  assert.equal(targetForSystemLang('pt-BR'), 'en', '不支持的语言回落到英文');
+  assert.equal(targetForSystemLang(''), 'en');
+});
 
 test('Key 按 host 分开存：换到别家时拿不到 DeepSeek 的 Key', () => {
   const s = mergeSettings({ llm: { baseUrl: 'https://api.deepseek.com/v1', apiKey: 'sk-deep', model: 'm' } });
