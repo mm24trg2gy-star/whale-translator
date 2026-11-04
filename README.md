@@ -1,3 +1,5 @@
+**中文** · [English](README.en.md)
+
 # 鲸译 · 省钱网页翻译
 
 Chrome / Edge 扩展。整页双语对照 + 划词翻译，**默认接口免 Key、免注册、国内能直连**；想更准就换成 DeepSeek 这类便宜的兼容接口。
@@ -212,7 +214,7 @@ chrome-translator/
 ## 开发与测试
 
 ```bash
-npm test               # 31 个单测 + 后台链路（假接口）：缓存、400 回退、条数校验、额度兜底、Key 隔离
+npm test               # 33 个单测 + 后台链路（假接口）：缓存、400 回退、条数校验、额度兜底、Key 隔离
 npm run test:browser   # 无头浏览器装扩展 → 翻页面 → 检查 DOM → 还原 → 划词 → 快捷键（约 60s）
 npm run test:fallback  # 额度用完 → 自动切大模型 → 页面提示 → 设置页状态 → 一键切回
 npm run test:import    # 真点「导出」→ 下载真文件 → 清空设置 → 导入回去 → 校验还原
